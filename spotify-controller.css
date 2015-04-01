@@ -1,0 +1,19 @@
+div#spotify-controls {
+	padding-top: 1em;
+	margin-left: 22px;
+}
+div#spotify-controls span svg {
+	margin: 0 0.2em;
+	cursor: pointer;
+	-webkit-filter: saturate(0%);
+	-moz-filter: saturate(0%);
+	filter: saturate(0%);
+}
+div#spotify-controls span svg:hover {
+	-webkit-filter: saturate(100%);
+	-moz-filter: saturate(100%);
+	filter: saturate(100%);
+}
+div#now-playing-track {
+	margin: 0.3em 0 0.7em 0 !important;
+}
