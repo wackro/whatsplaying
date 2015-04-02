@@ -62,12 +62,9 @@ var themes = {
 	},
 }
 
-
 var cachedResponse, currentUser, timer, currentTheme, themeNowPlayingIcon;
 
-
 function init(user) {
-
 	if($.cookie("currentUser") != null)
 		changeAccount($.cookie("currentUser"));
 	else
@@ -79,7 +76,8 @@ function init(user) {
 		currentTheme = "light-red";
 
 	$(document).ready(function() {
-		timer = window.setInterval("setRecentlyPlayedTracks(currentUser, false)", refreshRate);
+		timer = window.setInterval("setRecentlyPlayedTracks(currentUser, false)",
+			refreshRate);
 
 		$('#color-picker #theme-1').click(function() {
 			applyCss(themes['light-red']);
@@ -120,49 +118,32 @@ function init(user) {
 			}
 		});
 	});
-
 }
 
-
 function changeAccount(user, callback) {
-
-	console.log('setting account details for ' + user);
-
+	//console.log('setting account details for ' + user);
 	var userAccountUrl = 'http://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=' + user
 			+ '&api_key=' + apiKey
 			+ '&format=json';
-
 	$.getJSON(userAccountUrl, function(response) {
-
-		console.log(response);
-
+		// console.log(response);
 		if(response.error == null) {
-
 			clearInterval(timer);
-			timer = window.setInterval("setRecentlyPlayedTracks(currentUser, false)", refreshRate);
+			timer = window.setInterval("setRecentlyPlayedTracks(currentUser, false)",
+				refreshRate);
 
 			$('div#account #user-section').fadeOut(function() {
-
 				$('div#account img#profile-picture').attr('src', response.user.image[1]['#text']).parent().attr('href', response.user.url).attr('target', '_blank');
 				$('div#account span#account-name > a').text(response.user.name).attr('href', response.user.url).attr('target', '_blank');
-
 				if(user != currentUser) {
-
 					$('ul#tracks').empty();
-
 					$('.spinner').fadeIn(function() {
-
 						setRecentlyPlayedTracks(user);
-
 					});
-
 				}
-
 				currentUser = user;
 				$.cookie('currentUser', user)
-
 			}).fadeIn();
-
 		}
 		else {
 			switch(response.error){
@@ -172,54 +153,37 @@ function changeAccount(user, callback) {
 					$('input#account-search').css('background-color', '#fee');
 			}
 		}
-
 	});
 
 	if(typeof(callback) == "function")
 		callback();
-
 }
 
-
 function setRecentlyPlayedTracks(user, forceRedraw, callback) {
-
 	if(user == null)
 		return;
 
-	console.log('setting tracks for ' + user)
-
+	//console.log('setting tracks for ' + user)
 	var recentTracksUrl = 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=' + user
 	+ '&api_key=' + apiKey
 	+ '&limit=' + recentTracksLimit
 	+ '&format=json';
 
 	$.getJSON(recentTracksUrl, function(response) {
-
 		//console.log(recentTracksUrl);
 		//console.log(response);
-
 		if(hasResponseChanged(response) || forceRedraw) {
-
 			$('.spinner').fadeOut(function() {
-
 				cachedResponse = response;
-
 				$('ul#tracks').fadeOut(function() {
-
 					$('ul#tracks').empty();
-
 					$.each(response.recenttracks.track, function(i, track) {
-
 						//console.log(track);
-
 						if(i == 0 && track['@attr'] == null) {
-
 							$('ul#tracks').append('<li class="now-playing"><div id="now-playing-track">it\'s gone quiet :(</div></li>');
 							$('ul#tracks').append('<li>' + track.artist['#text'] + ' - ' + track.name + '<span class="time">' + timeAgoFromEpochTime(track.date.uts) + '</span></li>');
-
 						}
 						else if(track['@attr'] != null && track['@attr'].nowplaying == 'true') {
-
               $('ul#tracks').append('<li class="now-playing">\
                                       <div class="image-container">\
                                         <div id="track-container">\
@@ -236,26 +200,17 @@ function setRecentlyPlayedTracks(user, forceRedraw, callback) {
 		$('ul#tracks').trigger('trackChanged');
 
 		generateTrackOptionButtons(track.artist['#text'] + ' - ' + track.name, function(result) {
-
-                $('div#track-options').empty();
                 $('div#track-options').append(result);
-
                 setArtistImageUrl(track.artist['#text']);
-
-							  setAlbumArt(track.image[3]['#text']);
-
+		setAlbumArt(track.image[3]['#text']);
               });
 
 						}
 						else {
-
 							if(track.artist != null) {
-
 								$('ul#tracks').append('<li>' + track.artist['#text'] + ' - ' + track.name + '<span class="time">' + timeAgoFromEpochTime(track.date.uts) + '</span></li>');
-
 							}
 							else {
-
 								$('ul#tracks').append('<li class="now-playing"><div id="now-playing-track">it\'s gone quiet :(</div></li>');
 								$('ul#tracks').append('<li>' + response.recenttracks.track.artist['#text'] + ' - ' + response.recenttracks.track.name + '<span class="time">' + timeAgoFromEpochTime(response.recenttracks.track.date.uts) + '</span></li>');
 
@@ -265,7 +220,6 @@ function setRecentlyPlayedTracks(user, forceRedraw, callback) {
 								//
 								// ... so we end the iterating by returning false.
 								return false;
-
 							}
 						}
 
@@ -277,33 +231,23 @@ function setRecentlyPlayedTracks(user, forceRedraw, callback) {
 							applyCss(themes['light-red']);
 							currentTheme = 'light-red';
 						}
-
 					});
-
 				}).fadeIn();
-
 			});
-
 		}
-
 	});
-
 }
 
-
 function hasResponseChanged(response) {
-
 	//console.log('cached response')
 	//console.log(cachedResponse)
 	//console.log('this response')
 	//console.log(result + '\n')
-
 	if (cachedResponse == null && response != null)
 		return true;
 
 	var firstCachedTrack = getFirstTrack(cachedResponse.recenttracks.track);
 	var firstIncomingTrack = getFirstTrack(response.recenttracks.track);
-
 	if((cachedResponse.recenttracks['@attr'] != null && response.recenttracks['@attr'] != null ) && (cachedResponse.recenttracks['@attr'].total != response.recenttracks['@attr'].total)
 		|| firstCachedTrack.url != firstIncomingTrack.url
 		|| firstCachedTrack.date != null && firstIncomingTrack.date == null
@@ -313,36 +257,26 @@ function hasResponseChanged(response) {
 		|| (cachedResponse.recenttracks['@attr'] != null && cachedResponse.recenttracks['@attr'].nowplaying != response.recenttracks['@attr'].nowplaying)) {
 		return true;
 	}
-
   return false;
-
 }
 
-
 function getFirstTrack(track){
-
 	if(track.length == null)
 		return track;
 
 	return track[0];
-
 }
 
-
 function setAlbumArt(image) {
-
 	if(image == '' || image == 'undefined' || image == null) {
 		$('ul#tracks li img.album-art').attr('src', genericAlbumArtLocation);
 	}
 	else {
 		$('ul#tracks li img.album-art').attr('src', image);
 	}
-
 }
 
-
 function setArtistImageUrl(artist) {
-
 	var artistInfoUrl = 'http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=' + artist
 	+ '&api_key=' + apiKey
 	+ '&format=json';
@@ -350,32 +284,22 @@ function setArtistImageUrl(artist) {
 	//console.log(artistInfoUrl)
 
 	$.getJSON(artistInfoUrl, function(response) {
-
 		//console.log(response.artist.image[2]['#text']);
 		$('ul#tracks li img.artist-image').attr('src', response.artist.image[2]['#text'].replace('126', '126s'));
-
 	});
-
 }
 
-
 function applyCss(theme) {
-
 	$.each(theme["style"], function(element){
 		$.each(theme["style"][element], function(property) {
 			$(element).css(property, theme["style"][element][property]);
 		});
 	});
-
 	$('span#now-playing-icon-container').empty().append(createNowPlayingIcon(theme["color"]));	// todo make this work
-
 	$.cookie('currentTheme', theme.name)
-
 }
 
-
 function timeAgoFromEpochTime(epoch) {
-
 	var secs = Math.floor(((new Date()).getTime() / 1000) - epoch);
 
 	var minutes = secs / 60;
@@ -417,12 +341,9 @@ function timeAgoFromEpochTime(epoch) {
 	years = Math.floor(years);
 
 	return years + (years > 1 ? ' yrs' : ' year');
-
 }
 
-
 function createNowPlayingIcon(color) {
-
 	var svg = '<svg\
 				xmlns:dc="http://purl.org/dc/elements/1.1/"\
 				xmlns:cc="http://web.resource.org/cc/"\
@@ -454,18 +375,12 @@ function createNowPlayingIcon(color) {
 				</svg>';
 
 	return svg.replace(/#e73137/g, color);
-
 }
 
-
 function generateTrackOptionButtons(nowPlaying, callback) {
-
   var twitter = '<li class="glow"><a href="https://twitter.com/intent/tweet?button_hashtag=whatsplaying&text=Now Playing: ' + nowPlaying + '" class="twitter-hashtag-button" data-lang="en"><img src="twitter.png" /></a></li>';
-
   var spotify = '';
-
   getSpotifyLink(nowPlaying, function(result) {
-
     if(result != null) {
       spotify = '<li>\
                     <div class="multi-option-container">\
@@ -474,32 +389,18 @@ function generateTrackOptionButtons(nowPlaying, callback) {
                     </div>\
                 </li>';
     }
-
     callback('<ul id="track-options">' + twitter + spotify + '</ul>');
-
   });
-
 }
 
-
 function getSpotifyLink(nowPlaying, callback) {
-
   var spotifySearchURL = 'https://api.spotify.com/v1/search?q=' + nowPlaying + '&type=track&limit=1';
-
   var result;
-
   $.getJSON(spotifySearchURL, function(response) {
-
     if(response.tracks.items.length > 0) {
-
       result = { "web": response.tracks.items[0]['external_urls'].spotify, "native": response.tracks.items[0].uri };
-
       callback(result);
-
     }
-
     callback(null);
-
   });
-
 }
