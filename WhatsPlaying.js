@@ -19,7 +19,6 @@
 //
 // play stats and other last.fm stuff... otherwise this may as well be built on the spotify API..
 
-
 // Constants
 var apiKey = '5600cc0bd26ae12cea9724446e37ea6a';
 var recentTracksLimit = 3;
@@ -184,27 +183,26 @@ function setRecentlyPlayedTracks(user, forceRedraw, callback) {
 							$('ul#tracks').append('<li>' + track.artist['#text'] + ' - ' + track.name + '<span class="time">' + timeAgoFromEpochTime(track.date.uts) + '</span></li>');
 						}
 						else if(track['@attr'] != null && track['@attr'].nowplaying == 'true') {
-              $('ul#tracks').append('<li class="now-playing">\
-                                      <div class="image-container">\
-                                        <div id="track-container">\
-                                          <div id="track-options"></div>\
-                                          <img class="album-art" />\
-                                        </div>\
-                                        <img class="artist-image" />\
-                                      </div>\
-                                      <div id="now-playing-track">\
-                                        <span id="now-playing-icon-container">' + themeNowPlayingIcon + "</span>" + track.artist['#text'] + ' - ' + track.name + '\
-                                      </div>\
-                                    </li>');
-
-		$('ul#tracks').trigger('trackChanged');
-
-		generateTrackOptionButtons(track.artist['#text'] + ' - ' + track.name, function(result) {
-                $('div#track-options').append(result);
-                setArtistImageUrl(track.artist['#text']);
-		setAlbumArt(track.image[3]['#text']);
-              });
-
+							$('ul#tracks').append('<li class="now-playing">\
+										<div class="image-container">\
+										<div id="track-container">\
+										<div id="track-options"></div>\
+										<img class="album-art" />\
+										</div>\
+										<img class="artist-image" />\
+										</div>\
+										<div id="now-playing-track">\
+										<span id="now-playing-icon-container">' + themeNowPlayingIcon + "</span>" + track.artist['#text'] + ' - ' + track.name + '\
+										</div>\
+										</li>');
+					
+							$('ul#tracks').trigger('trackChanged');
+							
+							generateTrackOptionButtons(track.artist['#text'] + ' - ' + track.name, function(result) {
+							$('div#track-options').append(result);
+							setArtistImageUrl(track.artist['#text']);
+							setAlbumArt(track.image[3]['#text']);
+						});
 						}
 						else {
 							if(track.artist != null) {
@@ -212,9 +210,7 @@ function setRecentlyPlayedTracks(user, forceRedraw, callback) {
 							}
 							else {
 								$('ul#tracks').append('<li class="now-playing"><div id="now-playing-track">it\'s gone quiet :(</div></li>');
-								$('ul#tracks').append('<li>' + response.recenttracks.track.artist['#text'] + ' - ' + response.recenttracks.track.name + '<span class="time">' + timeAgoFromEpochTime(response.recenttracks.track.date.uts) + '</span></li>');
-
-								// the only reason to be in this block is when only one track has been played, ever.
+								$('ul#tracks').append('<li>' + response.recenttracks.track.artist['#text'] + ' - ' + response.recenttracks.track.name + '<span class="time">' + timeAgoFromEpochTime(response.recenttracks.track.date.uts) + '</span></li>');								// the only reason to be in this block is when only one track has been played, ever.
 								// in this case, the track is an object, not an array, but javascript is retarded
 								// and wants to iterate over all the properties of the object as if they were array elements (tracks).
 								//
@@ -222,8 +218,8 @@ function setRecentlyPlayedTracks(user, forceRedraw, callback) {
 								return false;
 							}
 						}
-
-
+						
+						
 						if($.cookie('currentTheme') != null) {
 							applyCss(themes[$.cookie('currentTheme')]);
 						}
@@ -263,7 +259,7 @@ function hasResponseChanged(response) {
 function getFirstTrack(track){
 	if(track.length == null)
 		return track;
-
+	
 	return track[0];
 }
 
@@ -345,35 +341,35 @@ function timeAgoFromEpochTime(epoch) {
 
 function createNowPlayingIcon(color) {
 	var svg = '<svg\
-				xmlns:dc="http://purl.org/dc/elements/1.1/"\
-				xmlns:cc="http://web.resource.org/cc/"\
-				xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"\
-				xmlns:svg="http://www.w3.org/2000/svg"\
-				xmlns="http://www.w3.org/2000/svg"\
-				xml:space="preserve"\
-				version="1.0"\
-				id="layer1"\
-				width="40pt" height="40pt"\
-				viewBox="0 0 75 75"><metadata\
-				id="metadata1"><rdf:RDF><cc:Work\
-				rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type\
-				rdf:resource="http://purl.org/dc/dcmitype/StillImage" /></cc:Work></rdf:RDF></metadata><g\
-				id="g1"><polygon\
-				id="polygon1"\
-				points="39.389,13.769 22.235,28.606 6,28.606 6,47.699 21.989,47.699 39.389,62.75 39.389,13.769"\
-				style="stroke:#e73137;stroke-width:5;stroke-linejoin:round;fill:#e73137;"\
-				/><path id="path1"\
-				d="M 48.128,49.03 C 50.057,45.934 51.19,42.291 51.19,38.377 C 51.19,34.399 50.026,30.703 48.043,27.577"\
-				style="fill:none;stroke:#e73137;stroke-width:5;stroke-linecap:round"/>\
-				<path id="path2"\
-				d="M 55.082,20.537 C 58.777,25.523 60.966,31.694 60.966,38.377 C 60.966,44.998 58.815,51.115 55.178,56.076"\
-				style="fill:none;stroke:#e73137;stroke-width:5;stroke-linecap:round"/>\
-				<path id="path1"\
-				d="M 61.71,62.611 C 66.977,55.945 70.128,47.531 70.128,38.378 C 70.128,29.161 66.936,20.696 61.609,14.01"\
-				style="fill:none;stroke:#e73137;stroke-width:5;stroke-linecap:round"/>\
-				</g>\
-				</svg>';
-
+		xmlns:dc="http://purl.org/dc/elements/1.1/"\
+		xmlns:cc="http://web.resource.org/cc/"\
+		xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"\
+		xmlns:svg="http://www.w3.org/2000/svg"\
+		xmlns="http://www.w3.org/2000/svg"\
+		xml:space="preserve"\
+		version="1.0"\
+		id="layer1"\
+		width="40pt" height="40pt"\
+		viewBox="0 0 75 75"><metadata\
+		id="metadata1"><rdf:RDF><cc:Work\
+		rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type\
+		rdf:resource="http://purl.org/dc/dcmitype/StillImage" /></cc:Work></rdf:RDF></metadata><g\
+		id="g1"><polygon\
+		id="polygon1"\
+		points="39.389,13.769 22.235,28.606 6,28.606 6,47.699 21.989,47.699 39.389,62.75 39.389,13.769"\
+		style="stroke:#e73137;stroke-width:5;stroke-linejoin:round;fill:#e73137;"\
+		/><path id="path1"\
+		d="M 48.128,49.03 C 50.057,45.934 51.19,42.291 51.19,38.377 C 51.19,34.399 50.026,30.703 48.043,27.577"\
+		style="fill:none;stroke:#e73137;stroke-width:5;stroke-linecap:round"/>\
+		<path id="path2"\
+		d="M 55.082,20.537 C 58.777,25.523 60.966,31.694 60.966,38.377 C 60.966,44.998 58.815,51.115 55.178,56.076"\
+		style="fill:none;stroke:#e73137;stroke-width:5;stroke-linecap:round"/>\
+		<path id="path1"\
+		d="M 61.71,62.611 C 66.977,55.945 70.128,47.531 70.128,38.378 C 70.128,29.161 66.936,20.696 61.609,14.01"\
+		style="fill:none;stroke:#e73137;stroke-width:5;stroke-linecap:round"/>\
+		</g>\
+		</svg>';
+		
 	return svg.replace(/#e73137/g, color);
 }
 
@@ -385,7 +381,7 @@ function generateTrackOptionButtons(nowPlaying, callback) {
       spotify = '<li>\
                     <div class="multi-option-container">\
                       <a class="glow" style="display:block" href="' + result.native + '"><img src="spotify.png" class="icon" /></a>\
-<a class="glow" style="line-height:24px;margin-top:1em;display:block;visibility:hidden;font-size:small" href="' + result.web + '" target="_blank"><img src="spotify.png" style="margin-right:4px" class="icon-small" /><span style="vertical-align:middle">web</span></a>\
+			<a class="glow" style="line-height:24px;margin-top:1em;display:block;visibility:hidden;font-size:small" href="' + result.web + '" target="_blank"><img src="spotify.png" style="margin-right:4px" class="icon-small" /><span style="vertical-align:middle">web</span></a>\
                     </div>\
                 </li>';
     }
