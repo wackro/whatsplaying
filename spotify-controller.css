@@ -3,7 +3,7 @@ div#spotify-controls {
 	margin-left: 22px;
 }
 div#spotify-controls span svg {
-	margin: 0 0.2em;
+	margin: 0 0.4em;
 	cursor: pointer;
 	-webkit-filter: saturate(0%);
 	-moz-filter: saturate(0%);
@@ -17,3 +17,21 @@ div#spotify-controls span svg:hover {
 div#now-playing-track {
 	margin: 0.3em 0 0.7em 0 !important;
 }
+span#toggle-play svg {
+    height: 45px !important;
+    width: 45px !important;
+}
+div#row1 {
+    margin-top: 0.5em;
+}
+#volume svg {
+    position: relative;
+    left: -5px;
+    -ms-transform: rotate(270deg); /* IE 9 */
+    -webkit-transform: rotate(270deg); /* Chrome, Safari, Opera */
+    transform: rotate(270deg);
+    width: 20px !important;
+    height: 20px !important;
+    margin: 0 !important;
+}
+

@@ -197,8 +197,8 @@ function setRecentlyPlayedTracks(user, forceRedraw, callback) {
 										</li>');
 					
 							$('ul#tracks').trigger('trackChanged');
-							
 							generateTrackOptionButtons(track.artist['#text'] + ' - ' + track.name, function(result) {
+							$('div#track-options').empty();
 							$('div#track-options').append(result);
 							setArtistImageUrl(track.artist['#text']);
 							setAlbumArt(track.image[3]['#text']);

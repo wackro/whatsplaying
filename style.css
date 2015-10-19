@@ -89,7 +89,6 @@ ul#tracks li svg {
 	width: 35px;
 	height: 35px;
 	margin-right: 20px;
-	vertical-align: middle;
 }
 ul#tracks #now-playing-track {
 	font-size: 2.5em;

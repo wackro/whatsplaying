@@ -34,8 +34,9 @@ function renderControls(state) {
 	$("div#spotify-controls").append('<span onclick="previous()">' + iconFactory('prev') + '</span>');
 	$("div#spotify-controls").append('<span id="toggle-play" onclick="togglePlay()">' + iconFactory(state.state == "playing" ? "pause" : "play") + '</span>');
 	$("div#spotify-controls").append('<span onclick="next()">' + iconFactory('next') + '</span>');
-	$("div#spotify-controls").append('<div id="volume" style="display:inline-block;vertical-align:middle">' + createNowPlayingIcon('#555') + '<input id="volume" type="range" min="0" max="100" step="5" value="' + state.volume + '" onchange="setVolumeFromSlider()"></div>');
-	$("div#spotify-controls").append('<br />');
+	$("div#spotify-controls").append('<div id="row1"></div>');
+	$("div#row1").append('<div id="volume" style="display:inline-block;vertical-align:middle">' + createNowPlayingIcon('#555') + '<input id="volume" type="range" min="0" max="100" step="5" value="' + state.volume + '" onchange="setVolumeFromSlider()"></div>');
+	$("div#row1").append('<br />');
 }
 
 /*
